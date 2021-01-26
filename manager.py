@@ -41,5 +41,30 @@ def get_version():
             conn.close()
             print('Database connection closed.')
 
+def get_all_accounts_for_userid(id):
+  conn = None
+  print('Retrieving all accounts...')
+  try:
+          params = read_db_config()
+          print('Connecting to the PostgreSQL database...')
+          conn = psycopg2.connect(**params)
+
+          # create a cursor
+          cur = conn.cursor()
+
+          cur.execute('SELECT * FROM accounts WHERE userid = \'{0}\';'.format(id))
+
+          accounts = cur.fetchone()
+          print(accounts)  
+
+          # close the communication with PostgreSQL
+          cur.close()
+
+  except (Exception, psycopg2.DatabaseError) as error:
+          print(error)
+  finally:
+          if conn is not None:
+            conn.close()
+         
 if __name__ == '__main__':
-  get_version()
+  get_all_accounts_for_userid('erik')
