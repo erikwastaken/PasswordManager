@@ -8,6 +8,7 @@ def print_menu():
 def is_input_clean(word):
   return word.isalnum()
 
+print()
 print("Welcome to your password_manager")
 print()
 print("Please log in")
@@ -26,7 +27,7 @@ while not is_input_clean(password):
   password = getpass.getpass("Password: ")
 
 user = User(user_name, password)
-user.get_accounts()
+print(user.get_accounts())
 
 answer = " "
 
