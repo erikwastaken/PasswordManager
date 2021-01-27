@@ -5,18 +5,18 @@ from db_util import DbUtil
 class User:
   name = " "
   password = " "
+  db_config = " "
   
   def __init__(self, name, password):
     self.name = name
     self.password = password
-
-  # should return a list of hash maps, i.e. dictionaries
-  def get_accounts(self):
+    self.params = DbUtil.read_db_config()
+  
+  def is_authenticated():
     conn = None
     db_user = None
-    params = DbUtil.read_db_config()
     try:
-      conn = psycopg2.connect(**params)
+      conn = psycopg2.connect(**self.params)
       # create a cursor
       cur = conn.cursor()
       cur.execute('SELECT * FROM users WHERE name = \'{0}\';'.format(self.name))
@@ -30,14 +30,14 @@ class User:
         conn.close()
     # is the password correct?
     hashed_password = hashlib.sha256(self.password.encode('utf-8')).hexdigest()
-    if hashed_password == db_user[1]:
-      print("login successful")
-    else:
-      raise Exception('login failed')
-    # get accounts
+    return (hashed_password == db_user)
+
+  # should return a list of hash maps, i.e. dictionaries
+  def get_accounts(self):
+    conn = None
     db_accounts = None
     try:
-      conn = psycopg2.connect(**params)
+      conn = psycopg2.connect(**self.params)
       # create a cursor
       cur = conn.cursor()
       cur.execute('SELECT * FROM accounts WHERE userid = \'{0}\';'.format(self.name))
