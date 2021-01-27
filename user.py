@@ -12,7 +12,7 @@ class User:
     self.password = password
     self.params = DbUtil.read_db_config()
   
-  def is_authenticated():
+  def is_authenticated(self):
     conn = None
     db_user = None
     try:
@@ -30,7 +30,7 @@ class User:
         conn.close()
     # is the password correct?
     hashed_password = hashlib.sha256(self.password.encode('utf-8')).hexdigest()
-    return (hashed_password == db_user)
+    return (hashed_password == db_user[1])
 
   # should return a list of hash maps, i.e. dictionaries
   def get_accounts(self):

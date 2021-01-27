@@ -27,13 +27,19 @@ while not is_input_clean(password):
   password = getpass.getpass("Password: ")
 
 user = User(user_name, password)
-print(user.get_accounts())
+print(user.is_authenticated())
+if not user.is_authenticated():
+  raise Exception('User or password incorrect')
 
 answer = " "
-
 while answer not in '12':
   print_menu()
   print()
   answer = input("choose: ")
 
-print("Not yet implemented")
+if answer == '1':
+  print("Not yet implemented")
+elif answer == '2':
+  accounts = user.get_accounts()
+  for a in accounts:
+    print('{0} | {1}'.format(a['site'], a['password']))
