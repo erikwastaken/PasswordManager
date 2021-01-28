@@ -19,7 +19,7 @@ class User:
       conn = psycopg2.connect(**self.params)
       # create a cursor
       cur = conn.cursor()
-      cur.execute('SELECT * FROM users WHERE name = \'{0}\';'.format(self.name))
+      cur.execute('SELECT * FROM users WHERE user_id = \'{0}\';'.format(self.name))
       db_user = cur.fetchone()
       # close the communication with PostgreSQL
       cur.close()
@@ -40,8 +40,8 @@ class User:
       conn = psycopg2.connect(**self.params)
       # create a cursor
       cur = conn.cursor()
-      cur.execute('SELECT * FROM accounts WHERE userid = \'{0}\';'.format(self.name))
-      db_accounts = cur.fetchmany()
+      cur.execute('SELECT * FROM accounts WHERE user_id = \'{0}\';'.format(self.name))
+      db_accounts = cur.fetchall()
       # close the communication with PostgreSQL
       cur.close()
     except (Exception, psycopg2.DatabaseError) as error:
@@ -53,8 +53,9 @@ class User:
     if db_accounts:
       for dba in db_accounts:
         account = {}
-        account['userid'] = dba[0]
-        account['site'] = dba[1]
-        account['password'] = dba[2]
+        account['user_id'] = dba[0]
+        account['service'] = dba[1]
+        account['login_name'] = dba[2]
+        account['login_password'] = dba[3]
         res_accounts.append(account)
     return res_accounts
