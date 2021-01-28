@@ -11,12 +11,14 @@ class Menu:
     while exit == False:
       self.display_menu()
       exit = ('Y' == input('Exit? (Y/N) ').upper())
+    print("Goodbye")
 
   def display_menu(self):
     answer = " "
-    while answer not in '12':
+    while answer not in '12qQ':
       print("1 - create password")
       print("2 - get password")
+      print("q - quit")
       print()
       answer = input("choose: ")
     print()
@@ -27,6 +29,8 @@ class Menu:
       print()
       index = input('Copy password to clipboard: ')
       pyperclip.copy(self.user.get_accounts()[int(index)]['login_password'])
+    elif answer.upper() == 'Q':
+      return
 
   def __is_input_clean(word):
     return word.isalnum()
