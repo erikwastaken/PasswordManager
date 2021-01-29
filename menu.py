@@ -15,20 +15,26 @@ class Menu:
 
   def display_menu(self):
     answer = " "
-    while answer not in '12qQ':
-      print("1 - create password")
+    while answer not in '123qQ':
+      print("1 - create new login account")
       print("2 - get password")
+      print("3 - change password")
       print("q - quit")
       print()
       answer = input("choose: ")
     print()
     if answer == '1':
-      print("Not yet implemented")
+      service = input("Service: ")
+      login_name = input("Login Name: ")
+      login_password = input("Password: ")
+      self.user.create_account(service,login_name,login_password)
     elif answer == '2':
       self.__display_accounts()
       print()
       index = input('Copy password to clipboard: ')
       pyperclip.copy(self.user.get_accounts()[int(index)]['login_password'])
+    elif answer == '3':
+      print("Not yet implemented")
     elif answer.upper() == 'Q':
       return
 

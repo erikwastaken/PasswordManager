@@ -59,3 +59,20 @@ class User:
         account['login_password'] = dba[3]
         res_accounts.append(account)
     return res_accounts
+
+  def create_account(self,service, login_name, login_password):
+    conn = None
+    try:
+      conn = psycopg2.connect(**self.params)
+      # create a cursor
+      cur = conn.cursor()
+      cur.execute('''INSERT INTO accounts (user_id,service,login_name,login_password)
+                     VALUES (%s,%s,%s,%s);''',(self.name,service,login_name,login_password))
+      conn.commit()
+      # close the communication with PostgreSQL
+      cur.close()
+    except (Exception, psycopg2.DatabaseError) as error:
+      print(error)
+    finally:
+      if conn is not None:
+        conn.close()
