@@ -76,3 +76,23 @@ class User:
     finally:
       if conn is not None:
         conn.close()
+
+  def change_account_password(self,new_password,service,login_name):
+    conn = None
+    try:
+      conn = psycopg2.connect(**self.params)
+      # create a cursor
+      cur = conn.cursor()
+      cur.execute('''UPDATE accounts
+                     SET login_password = \'{0}\'
+                     WHERE user_id = \'{1}\'
+                       AND service = \'{2}\'
+                       AND login_name = \'{3}\';'''.format(new_password,self.name,service,login_name))
+      conn.commit()
+      # close the communication with PostgreSQL
+      cur.close()
+    except (Exception, psycopg2.DatabaseError) as error:
+      print(error)
+    finally:
+      if conn is not None:
+        conn.close()

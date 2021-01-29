@@ -34,7 +34,14 @@ class Menu:
       index = input('Copy password to clipboard: ')
       pyperclip.copy(self.user.get_accounts()[int(index)]['login_password'])
     elif answer == '3':
-      print("Not yet implemented")
+      self.__display_accounts()
+      print()
+      index = int(input("Which password should be updated? "))
+      new_password = input("Enter new password: ")
+      service = self.user.get_accounts()[index]['service']
+      login_name = self.user.get_accounts()[index]['login_name']
+      self.user.change_account_password(new_password,service,login_name)
+      print("Password for {0} changed to {1}".format(service,new_password))
     elif answer.upper() == 'Q':
       return
 
