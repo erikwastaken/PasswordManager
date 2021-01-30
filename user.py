@@ -13,42 +13,16 @@ class User:
     self.params = DbUtil.read_db_config()
   
   def is_authenticated(self):
-    conn = None
-    db_user = None
-    try:
-      conn = psycopg2.connect(**self.params)
-      # create a cursor
-      cur = conn.cursor()
-      cur.execute('SELECT * FROM users WHERE user_id = \'{0}\';'.format(self.name))
-      db_user = cur.fetchone()
-      # close the communication with PostgreSQL
-      cur.close()
-    except (Exception, psycopg2.DatabaseError) as error:
-      print(error)
-    finally:
-      if conn is not None:
-        conn.close()
+    sql_statement = 'SELECT * FROM users WHERE user_id = \'{0}\';'.format(self.name) 
+    db_user = self.__execute_select_single(sql_statement)
     # is the password correct?
     hashed_password = hashlib.sha256(self.password.encode('utf-8')).hexdigest()
     return (hashed_password == db_user[1])
 
   # should return a list of hash maps, i.e. dictionaries
   def get_accounts(self):
-    conn = None
-    db_accounts = None
-    try:
-      conn = psycopg2.connect(**self.params)
-      # create a cursor
-      cur = conn.cursor()
-      cur.execute('SELECT * FROM accounts WHERE user_id = \'{0}\';'.format(self.name))
-      db_accounts = cur.fetchall()
-      # close the communication with PostgreSQL
-      cur.close()
-    except (Exception, psycopg2.DatabaseError) as error:
-      print(error)
-    finally:
-      if conn is not None:
-        conn.close()
+    sql_statement = 'SELECT * FROM accounts WHERE user_id = \'{0}\';'.format(self.name)
+    db_accounts = self.__execute_select_all(sql_statement)
     res_accounts = []
     if db_accounts:
       for dba in db_accounts:
@@ -88,3 +62,39 @@ class User:
     finally:
       if conn is not None:
         conn.close()
+
+  def __execute_select_single(self,sql_statement):
+    conn = None
+    result = None
+    try:
+      conn = psycopg2.connect(**self.params)
+      # create a cursor
+      cur = conn.cursor()
+      cur.execute(sql_statement)
+      result = cur.fetchone()
+      # close the communication with PostgreSQL
+      cur.close()
+    except (Exception, psycopg2.DatabaseError) as error:
+      print(error)
+    finally:
+      if conn is not None:
+        conn.close()
+    return result
+
+  def __execute_select_all(self,sql_statement):
+    conn = None
+    result = None
+    try:
+      conn = psycopg2.connect(**self.params)
+      # create a cursor
+      cur = conn.cursor()
+      cur.execute(sql_statement)
+      result = cur.fetchall()
+      # close the communication with PostgreSQL
+      cur.close()
+    except (Exception, psycopg2.DatabaseError) as error:
+      print(error)
+    finally:
+      if conn is not None:
+        conn.close()
+    return result
