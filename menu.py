@@ -32,8 +32,18 @@ class Menu:
     elif answer == '2':
       self.__display_accounts()
       print()
-      index = input('Copy password to clipboard: ')
-      pyperclip.copy(self.user.get_accounts()[int(index)]['login_password'])
+      index = input("Choose password: ")
+      print()
+      print("1 - display password")
+      print("2 - copy password to clipboard")
+      i = input("Choose: ")
+      if i == '1':
+        print(self.user.get_accounts()[int(index)]['login_password'])
+      elif i == '2':
+        pyperclip.copy(self.user.get_accounts()[int(index)]['login_password'])
+        print("Password copied to clipboard")
+      else:
+        print("wrong input")
     elif answer == '3':
       self.__display_accounts()
       print()
