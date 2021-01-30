@@ -98,3 +98,11 @@ class User:
       if conn is not None:
         conn.close()
     return result
+
+  def delete_account(self,service,login_name):
+    sql_statement = '''DELETE FROM accounts 
+                        WHERE user_id = \'{0}\'
+                          AND service = \'{1}\'
+                          AND login_name = \'{2}\';'''.format(self.name,service,login_name)
+    self.__execute_statement_and_commit(sql_statement)
+

@@ -15,10 +15,11 @@ class Menu:
 
   def display_menu(self):
     answer = " "
-    while answer not in '123qQ':
+    while answer not in '1234qQ':
       print("1 - create new login account")
       print("2 - get password")
       print("3 - change password")
+      print("4 - delete login account")
       print("q - quit")
       print()
       answer = input("choose: ")
@@ -42,6 +43,16 @@ class Menu:
       login_name = self.user.get_accounts()[index]['login_name']
       self.user.change_account_password(new_password,service,login_name)
       print("Password for {0} changed to {1}".format(service,new_password))
+    elif answer == '4':
+      self.__display_accounts()
+      print()
+      index = int(input("Which password should be deleted? "))
+      service = self.user.get_accounts()[index]['service']
+      login_name = self.user.get_accounts()[index]['login_name']
+      confirmation_answer = input("Are you sure that you want to delete the account for service {0}? Y/N ".format(service))
+      if confirmation_answer.upper() == 'Y':
+        self.user.delete_account(service,login_name)
+        print("Account for service {0} has been deleted.".format(service))
     elif answer.upper() == 'Q':
       return
 
