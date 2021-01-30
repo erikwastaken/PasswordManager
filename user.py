@@ -61,33 +61,25 @@ class User:
     return res_accounts
 
   def create_account(self,service, login_name, login_password):
-    conn = None
-    try:
-      conn = psycopg2.connect(**self.params)
-      # create a cursor
-      cur = conn.cursor()
-      cur.execute('''INSERT INTO accounts (user_id,service,login_name,login_password)
-                     VALUES (%s,%s,%s,%s);''',(self.name,service,login_name,login_password))
-      conn.commit()
-      # close the communication with PostgreSQL
-      cur.close()
-    except (Exception, psycopg2.DatabaseError) as error:
-      print(error)
-    finally:
-      if conn is not None:
-        conn.close()
-
+    sql_statement = '''INSERT INTO accounts (user_id,service,login_name,login_password)
+                       VALUES (\'{0}\',\'{1}\',\'{2}\',\'{3}\');'''.format(self.name,service,login_name,login_password) 
+    self.__execute_statement_and_commit(sql_statement)
+    
   def change_account_password(self,new_password,service,login_name):
+    sql_statement = '''UPDATE accounts
+                       SET login_password = \'{0}\'
+                       WHERE user_id = \'{1}\'
+                         AND service = \'{2}\'
+                         AND login_name = \'{3}\';'''.format(new_password,self.name,service,login_name)
+    self.__execute_statement_and_commit(sql_statement)
+
+  def __execute_statement_and_commit(self,sql_statement):
     conn = None
     try:
       conn = psycopg2.connect(**self.params)
       # create a cursor
       cur = conn.cursor()
-      cur.execute('''UPDATE accounts
-                     SET login_password = \'{0}\'
-                     WHERE user_id = \'{1}\'
-                       AND service = \'{2}\'
-                       AND login_name = \'{3}\';'''.format(new_password,self.name,service,login_name))
+      cur.execute(sql_statement)
       conn.commit()
       # close the communication with PostgreSQL
       cur.close()
