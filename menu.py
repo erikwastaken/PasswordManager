@@ -61,6 +61,14 @@ class Menu:
     if not self.user.is_authenticated():
       raise Exception('User or password incorrect')
 
+  def __get_clean_input_for_field(fieldname):
+    value = input("{0}: ".format(fieldname))
+    while not Menu.__is_input_clean(value):
+      print("Entered {0} contains characters which are not allowed".format(fieldname))
+      print("Please try again")
+      value = input("{0}: ".format(fieldname))
+    return value
+
   def __display_accounts(self):
     c = 0
     for a in self.user.get_accounts():
@@ -68,9 +76,9 @@ class Menu:
       c += 1
 
   def __create_new_account(self):
-    service = input("Service: ")
-    login_name = input("Login Name: ")
-    login_password = input("Password: ")
+    service = Menu.__get_clean_input_for_field("Service")
+    login_name = Menu.__get_clean_input_for_field("Login Name")
+    login_password = Menu.__get_clean_input_for_field("Password")
     self.user.create_account(service,login_name,login_password)
 
   def __get_password(self):
@@ -93,7 +101,7 @@ class Menu:
     self.__display_accounts()
     print()
     index = int(input("Which password should be updated? "))
-    new_password = input("Enter new password: ")
+    new_password = Menu.__get_clean_input_for_field("Password")
     service = self.user.get_accounts()[index]['service']
     login_name = self.user.get_accounts()[index]['login_name']
     self.user.change_account_password(new_password,service,login_name)
