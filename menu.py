@@ -44,12 +44,8 @@ class Menu:
     print()
     print("Please log in")
     print()
-
-    user_name = input("User: ")
-    while not Menu.__is_input_clean(user_name):
-      print("Entered user name contains characters which are not allowed")
-      print("Please try again")
-      user_name = input("User: ")
+    
+    user_name = Menu.__get_clean_input_for_field("User")
 
     password = getpass.getpass("Password: ")
     while not Menu.__is_input_clean(password):
