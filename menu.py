@@ -44,14 +44,8 @@ class Menu:
     print()
     print("Please log in")
     print()
-    
     user_name = Menu.__get_clean_input_for_field("User")
-
-    password = getpass.getpass("Password: ")
-    while not Menu.__is_input_clean(password):
-      print("Entered password contains characters which are not allowed")
-      print("Please try again")
-      password = getpass.getpass("Password: ")
+    password = Menu.__get_clean_password()
 
     self.user = User(user_name, password)
     if not self.user.is_authenticated():
@@ -64,6 +58,14 @@ class Menu:
       print("Please try again")
       value = input("{0}: ".format(fieldname))
     return value
+
+  def __get_clean_password():
+    password = getpass.getpass("Password: ")
+    while not Menu.__is_input_clean(password):
+      print("Entered password contains characters which are not allowed")
+      print("Please try again")
+      password = getpass.getpass("Password: ")
+    return password
 
   def __display_accounts(self):
     c = 0
