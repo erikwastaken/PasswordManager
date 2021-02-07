@@ -49,4 +49,10 @@ class User:
                           AND service = \'{1}\'
                           AND login_name = \'{2}\';'''.format(self.name,service,login_name)
     db_util.execute_statement_and_commit(sql_statement)
-
+  
+  def change_master_password(self,new_master_password):
+    hashed_password = hashlib.sha256(new_master_password.encode('utf-8')).hexdigest()
+    sql_statement = '''UPDATE users
+                       SET hashed_pw = \'{0}\'
+                       WHERE user_id = \'{1}\';'''.format(hashed_password, self.name)
+    db_util.execute_statement_and_commit(sql_statement)

@@ -15,11 +15,12 @@ class Menu:
 
   def display_menu(self):
     answer = " "
-    while answer not in '1234qQ':
+    while answer not in '12345qQ':
       print("1 - create new login account")
       print("2 - get password")
       print("3 - change password")
       print("4 - delete login account")
+      print("5 - change master password")
       print("q - quit")
       print()
       answer = input("choose: ")
@@ -32,6 +33,8 @@ class Menu:
       self.__change_password() 
     elif answer == '4':
       self.__delete_login()
+    elif answer == '5':
+      self.__change_master_password()
     elif answer.upper() == 'Q':
       return
 
@@ -115,3 +118,15 @@ class Menu:
     if confirmation_answer.upper() == 'Y':
       self.user.delete_account(service,login_name)
       print("Account for service {0} has been deleted.".format(service))
+
+  def __change_master_password(self):
+    print()
+    print("Enter new master password:")
+    new_password = Menu.__get_clean_password()
+    print("Confirm new master password:")
+    confirmation = Menu.__get_clean_password()
+    if new_password == confirmation:
+      self.user.change_master_password(new_password)
+      print("Master password has been changed")
+    else:
+      print("Confirmation failed")
