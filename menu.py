@@ -2,15 +2,20 @@ import getpass
 import pyperclip
 from user import User
 
+class WrongPasswordException(Exception):
+  pass
 class Menu:
   user = None
   
   def main_loop(self):
     self.login()
     exit = False
-    while exit == False:
-      self.display_menu()
-      exit = ('Y' == input('Exit? (Y/N) ').upper())
+    try:
+      while exit == False:
+        self.display_menu()
+        exit = ('Y' == input('Exit? (Y/N) ').upper())
+    except WrongPasswordException as e:
+      print(e)
     print("Goodbye")
 
   def display_menu(self):
@@ -121,6 +126,10 @@ class Menu:
 
   def __change_master_password(self):
     print()
+    print("Enter current master password:")
+    curr_master_pw = Menu.__get_clean_password()
+    if not self.user.is_master_password(curr_master_pw):
+      raise WrongPasswordException("Wrong master password")
     print("Enter new master password:")
     new_password = Menu.__get_clean_password()
     print("Confirm new master password:")
@@ -130,3 +139,4 @@ class Menu:
       print("Master password has been changed")
     else:
       print("Confirmation failed")
+

@@ -5,7 +5,6 @@ class User:
   def __init__(self, name, password):
     self.name = name
     self.password = password
-    # self.params = db_util.read_db_config()
     db_util.read_db_config()
   
   def is_authenticated(self):
@@ -14,6 +13,9 @@ class User:
     # is the password correct?
     hashed_password = hashlib.sha256(self.password.encode('utf-8')).hexdigest()
     return (hashed_password == db_user[1])
+
+  def is_master_password(self, pw_candidate):
+    return pw_candidate == self.password
 
   # should return a list of hash maps, i.e. dictionaries
   def get_accounts(self):
