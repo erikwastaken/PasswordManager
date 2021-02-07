@@ -2,19 +2,20 @@ import getpass
 import pyperclip
 from user import User
 
-class WrongPasswordException(Exception):
+class WrongMasterData(Exception):
   pass
+
 class Menu:
   user = None
   
   def main_loop(self):
-    self.login()
-    exit = False
     try:
+      self.login()
+      exit = False
       while exit == False:
         self.display_menu()
         exit = ('Y' == input('Exit? (Y/N) ').upper())
-    except WrongPasswordException as e:
+    except WrongMasterData as e:
       print(e)
     print("Goodbye")
 
@@ -57,7 +58,7 @@ class Menu:
 
     self.user = User(user_name, password)
     if not self.user.is_authenticated():
-      raise Exception('User or password incorrect')
+      raise WrongMasterData('User or password incorrect')
 
   def __get_clean_input_for_field(fieldname):
     value = input("{0}: ".format(fieldname))
@@ -129,7 +130,7 @@ class Menu:
     print("Enter current master password:")
     curr_master_pw = Menu.__get_clean_password()
     if not self.user.is_master_password(curr_master_pw):
-      raise WrongPasswordException("Wrong master password")
+      raise WrongMasterData("Wrong master password")
     print("Enter new master password:")
     new_password = Menu.__get_clean_password()
     print("Confirm new master password:")
