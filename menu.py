@@ -1,6 +1,7 @@
 import getpass
 import pyperclip
 from user import User
+import password_generator
 
 class WrongMasterData(Exception):
   pass
@@ -21,12 +22,13 @@ class Menu:
 
   def display_menu(self):
     answer = " "
-    while answer not in '12345qQ':
+    while answer not in '123456qQ':
       print("1 - create new login account")
       print("2 - get password")
       print("3 - change password")
       print("4 - delete login account")
       print("5 - change master password")
+      print("6 - generate password")
       print("q - quit")
       print()
       answer = input("choose: ")
@@ -41,6 +43,8 @@ class Menu:
       self.__delete_login()
     elif answer == '5':
       self.__change_master_password()
+    elif answer == '6':
+      self.__generate_password()
     elif answer.upper() == 'Q':
       return
 
@@ -140,4 +144,9 @@ class Menu:
       print("Master password has been changed")
     else:
       print("Confirmation failed")
-
+  
+  def __generate_password(self):
+    print()
+    length = int(input("How many characters should the password have? "))
+    gen_pw = password_generator.get_generated_password(length)
+    print('Generated password: {0}'.format(gen_pw))
