@@ -10,6 +10,8 @@ class User:
   def is_authenticated(self):
     sql_statement = 'SELECT * FROM users WHERE user_id = \'{0}\';'.format(self.name) 
     db_user = db_util.execute_select_single(sql_statement)
+    if not db_user:
+      return False
     # is the password correct?
     hashed_password = hashlib.sha256(self.password.encode('utf-8')).hexdigest()
     return (hashed_password == db_user[1])
