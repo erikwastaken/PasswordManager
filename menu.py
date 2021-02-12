@@ -89,6 +89,11 @@ class Menu:
   def __create_new_account(self):
     service = Menu.__get_clean_input_for_field("Service")
     login_name = Menu.__get_clean_input_for_field("Login Name")
+    gen_pass = ' '
+    while gen_pass not in 'YN':
+      gen_pass = input('Generate Password? [Y/N] ').upper()
+    if gen_pass == 'Y':
+      self.__generate_password()
     login_password = Menu.__get_clean_input_for_field("Password")
     self.user.create_account(service,login_name,login_password)
 
