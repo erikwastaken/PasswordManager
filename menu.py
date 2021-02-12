@@ -117,6 +117,11 @@ class Menu:
     self.__display_accounts()
     print()
     index = int(input("Which password should be updated? "))
+    gen_pass = ' '
+    while gen_pass not in 'YN':
+      gen_pass = input('Generate Password? [Y/N] ').upper()
+    if gen_pass == 'Y':
+      self.__generate_password()
     new_password = Menu.__get_clean_input_for_field("Password")
     service = self.user.get_accounts()[index]['service']
     login_name = self.user.get_accounts()[index]['login_name']
