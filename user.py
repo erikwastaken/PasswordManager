@@ -9,8 +9,8 @@ class User:
     db_util.read_db_config()
   
   def is_authenticated(self):
-    sql_statement = 'SELECT * FROM users WHERE user_id = \'{0}\';'.format(self.name) 
-    db_user = db_util.execute_select_single(sql_statement)
+    sql_statement = 'SELECT * FROM users WHERE user_id = %s'
+    db_user = db_util.execute_select_single(sql_statement,p1=self.name)
     if not db_user:
       return False
     # is the password correct?
@@ -22,8 +22,8 @@ class User:
 
   # should return a JSON string
   def get_accounts(self):
-    sql_statement = 'SELECT * FROM accounts WHERE user_id = \'{0}\';'.format(self.name)
-    db_accounts = db_util.execute_select_all(sql_statement)
+    sql_statement = 'SELECT * FROM accounts WHERE user_id = %s'
+    db_accounts = db_util.execute_select_all(sql_statement,p1=self.name)
     res_accounts = []
     if db_accounts:
       for dba in db_accounts:
@@ -39,27 +39,27 @@ class User:
 
   def create_account(self,service, login_name, login_password):
     sql_statement = '''INSERT INTO accounts (user_id,service,login_name,login_password)
-                       VALUES (\'{0}\',\'{1}\',\'{2}\',\'{3}\');'''.format(self.name,service,login_name,login_password) 
-    db_util.execute_statement_and_commit(sql_statement)
+                       VALUES (%s,%s,%s,%s);''' 
+    db_util.execute_statement_and_commit(sql_statement,p1=self.name,p2=service,p3=login_name,p4=login_password)
     
   def change_account_password(self,new_password,service,login_name):
     sql_statement = '''UPDATE accounts
-                       SET login_password = \'{0}\'
-                       WHERE user_id = \'{1}\'
-                         AND service = \'{2}\'
-                         AND login_name = \'{3}\';'''.format(new_password,self.name,service,login_name)
-    db_util.execute_statement_and_commit(sql_statement)
+                       SET login_password = %s
+                       WHERE user_id = %s 
+                         AND service = %s
+                         AND login_name = %s;'''
+    db_util.execute_statement_and_commit(sql_statement,p1=new_password,p2=self.name,p3=service,p4=login_name)
 
   def delete_account(self,service,login_name):
     sql_statement = '''DELETE FROM accounts 
-                        WHERE user_id = \'{0}\'
-                          AND service = \'{1}\'
-                          AND login_name = \'{2}\';'''.format(self.name,service,login_name)
-    db_util.execute_statement_and_commit(sql_statement)
+                        WHERE user_id = %s
+                          AND service = %s 
+                          AND login_name = %s;'''
+    db_util.execute_statement_and_commit(sql_statement,p1=self.name,p2=service,p3=login_name)
   
   def change_master_password(self,new_master_password):
     hashed_password = hashlib.sha256(new_master_password.encode('utf-8')).hexdigest()
     sql_statement = '''UPDATE users
-                       SET hashed_pw = \'{0}\'
-                       WHERE user_id = \'{1}\';'''.format(hashed_password, self.name)
-    db_util.execute_statement_and_commit(sql_statement)
+                       SET hashed_pw = %s
+                       WHERE user_id = %s;'''
+    db_util.execute_statement_and_commit(sql_statement,p1=hashed_password,p2=self.name)
