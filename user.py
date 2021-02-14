@@ -1,5 +1,6 @@
 import hashlib
 import db_util
+import json
 
 class User:
   def __init__(self, name, password):
@@ -19,7 +20,7 @@ class User:
   def is_master_password(self, pw_candidate):
     return pw_candidate == self.password
 
-  # should return a list of hash maps, i.e. dictionaries
+  # should return a JSON string
   def get_accounts(self):
     sql_statement = 'SELECT * FROM accounts WHERE user_id = \'{0}\';'.format(self.name)
     db_accounts = db_util.execute_select_all(sql_statement)
@@ -32,7 +33,9 @@ class User:
         account['login_name'] = dba[2]
         account['login_password'] = dba[3]
         res_accounts.append(account)
-    return res_accounts
+    content = {}
+    content['accounts'] = res_accounts
+    return json.dumps(content)
 
   def create_account(self,service, login_name, login_password):
     sql_statement = '''INSERT INTO accounts (user_id,service,login_name,login_password)

@@ -2,6 +2,7 @@ import getpass
 import pyperclip
 from user import User
 import password_generator
+import json
 
 class WrongMasterData(Exception):
   pass
@@ -82,7 +83,8 @@ class Menu:
 
   def __display_accounts(self):
     c = 0
-    for a in self.user.get_accounts():
+    accounts = json.loads(self.user.get_accounts())['accounts']
+    for a in accounts:
       print('{0} | {1} | {2}'.format(c,a['service'], a['login_name']))
       c += 1
 
