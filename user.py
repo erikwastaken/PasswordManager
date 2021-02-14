@@ -8,8 +8,8 @@ class User:
     db_util.read_db_config()
   
   def is_authenticated(self):
-    sql_statement = 'SELECT * FROM users WHERE user_id = \'{0}\';'.format(self.name) 
-    db_user = db_util.execute_select_single(sql_statement)
+    sql_statement = 'SELECT * FROM users WHERE user_id = %s'
+    db_user = db_util.execute_select_single(sql_statement,sql_params=self.name)
     if not db_user:
       return False
     # is the password correct?

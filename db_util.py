@@ -33,14 +33,14 @@ def execute_statement_and_commit(sql_statement):
     if conn is not None:
       conn.close()
 
-def execute_select_single(sql_statement):
+def execute_select_single(sql_statement,**sql_params):
   conn = None
   result = None
   try:
     conn = psycopg2.connect(**params)
     # create a cursor
     cur = conn.cursor()
-    cur.execute(sql_statement)
+    cur.execute(sql_statement,list(sql_params.values()))
     result = cur.fetchone()
     # close the communication with PostgreSQL
     cur.close()
