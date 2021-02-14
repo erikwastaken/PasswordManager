@@ -17,13 +17,13 @@ def read_db_config(filename='database.ini',section='postgresql'):
 
 params = read_db_config()
 
-def execute_statement_and_commit(sql_statement):
+def execute_statement_and_commit(sql_statement,**sql_params):
   conn = None
   try:
     conn = psycopg2.connect(**params)
     # create a cursor
     cur = conn.cursor()
-    cur.execute(sql_statement)
+    cur.execute(sql_statement,list(sql_params.values()))
     conn.commit()
     # close the communication with PostgreSQL
     cur.close()
@@ -51,14 +51,14 @@ def execute_select_single(sql_statement,**sql_params):
       conn.close()
   return result
 
-def execute_select_all(sql_statement):
+def execute_select_all(sql_statement,**sql_params):
   conn = None
   result = None
   try:
     conn = psycopg2.connect(**params)
     # create a cursor
     cur = conn.cursor()
-    cur.execute(sql_statement)
+    cur.execute(sql_statement,list(sql_params.values()))
     result = cur.fetchall()
     # close the communication with PostgreSQL
     cur.close()
