@@ -49,6 +49,7 @@ class Menu:
     elif answer.upper() == 'Q':
       return
 
+  @staticmethod
   def __is_input_clean(word):
     return word.isalnum()
   
@@ -64,7 +65,8 @@ class Menu:
     self.user = User(user_name, password)
     if not self.user.is_authenticated():
       raise WrongMasterData('User or password incorrect')
-
+  
+  @staticmethod
   def __get_clean_input_for_field(fieldname):
     value = input("{0}: ".format(fieldname))
     while not Menu.__is_input_clean(value):
@@ -73,6 +75,7 @@ class Menu:
       value = input("{0}: ".format(fieldname))
     return value
 
+  @staticmethod
   def __get_clean_password():
     password = getpass.getpass("Password: ")
     while not Menu.__is_input_clean(password):
