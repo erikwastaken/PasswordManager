@@ -4,7 +4,7 @@ api = Flask(__name__)
 
 @api.route('/')
 def index():
-    return 'Welcome to your password manager"
+    return 'Welcome to your password manager'
 
 @api.route('/login')
 def login():
