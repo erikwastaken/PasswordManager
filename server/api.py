@@ -31,9 +31,26 @@ def logout():
     session.pop('username',None)
     return ''
 
-@api.route('/<string:username>/accounts')
+@api.route('/<string:username>/accounts', methods=['GET'])
 def accounts_for_user(username):
-    pass
+    if 'username' not in session:
+        return abort(404)
+    if username != session['username']:
+        return abort(404)
+    sql_statement = 'SELECT * FROM accounts WHERE user_id = %s'
+    db_accounts = db_util.execute_select_all(sql_statement,p1=username)
+    res_accounts = []
+    if db_accounts:
+        for dba in db_accounts:
+            account = {}
+            account['user_id'] = dba[0]
+            account['service'] = dba[1]
+            account['login_name'] = dba[2]
+            account['login_password'] = dba[3]
+            res_accounts.append(account)
+    content = {}
+    content['accounts'] = res_accounts
+    return json.dumps(content)
 
 @api.route('/<string:username>/account/<int:account_id>')
 def account_for_id(username, account_id):
