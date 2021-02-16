@@ -2,20 +2,20 @@ from configparser import ConfigParser
 import psycopg2
 
 
-def read_db_config(filename='server/database.ini',section='postgresql'):
+def get_configuration(section,filename='server/database.ini'):
   parser = ConfigParser()
   parser.read(filename)
   # get section, default to postgresql
-  db = {}
+  config = {}
   if parser.has_section(section):
     contents = parser.items(section)
     for param in contents:
-      db[param[0]] = param[1]
+      config[param[0]] = param[1]
   else:
     raise Exception('Section {0} not found in file {1}'.format(section,filename))
-  return db
+  return config
 
-params = read_db_config()
+params = get_configuration(section='postgresql')
 
 def execute_statement_and_commit(sql_statement,**sql_params):
   conn = None

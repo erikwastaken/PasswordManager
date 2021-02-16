@@ -2,23 +2,10 @@ from flask import Flask,request,session,abort
 import json
 import db_util
 import hashlib
-from configparser import ConfigParser
 
 api = Flask(__name__)
 
-def get_api_key(filename='server/database.ini',section='apikey'):
-    parser = ConfigParser()
-    parser.read(filename)
-    api_config = {}
-    if parser.has_section(section):
-        contents = parser.items(section)
-        for param in contents:
-            api_config[param[0]] = param[1]
-    else:
-        raise Exception('Section {0} not found in file {1}'.format(section,filename))
-    return api_config['skey']
-
-api.secret_key = get_api_key()
+api.secret_key = db_util.get_configuration(section='apikey')['skey']
 
 @api.route('/')
 def index():
