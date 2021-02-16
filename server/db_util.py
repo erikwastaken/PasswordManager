@@ -2,7 +2,7 @@ from configparser import ConfigParser
 import psycopg2
 
 
-def read_db_config(filename='database.ini',section='postgresql'):
+def read_db_config(filename='server/database.ini',section='postgresql'):
   parser = ConfigParser()
   parser.read(filename)
   # get section, default to postgresql
