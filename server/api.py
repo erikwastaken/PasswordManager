@@ -28,12 +28,14 @@ def login():
     hashed_password = hashlib.sha256(content['password'].encode('utf-8')).hexdigest()
     if hashed_password == user['password']:
         session['username'] = content['username']
+        session['user_id'] = user['user_id']
         return json.dumps(user)
     return abort(403)
 
 @api.route('/logout',methods=['GET','POST'])
 def logout():
     session.pop('username',None)
+    session.pop('user_id',None)
     return ''
 
 @api.route('/<string:username>/accounts', methods=['GET','POST'])
@@ -41,10 +43,8 @@ def accounts_for_user(username):
     if not _is_logged_in(username):
         return abort(403)
     if request.method == 'GET':
-        sql_statement = 'SELECT * FROM users WHERE username = %s'
-        db_user = db_util.execute_select_single(sql_statement,p1=username)
         sql_statement = 'SELECT * FROM accounts WHERE user_id = %s'
-        db_accounts = db_util.execute_select_all(sql_statement,p1=db_user[0])
+        db_accounts = db_util.execute_select_all(sql_statement,p1=session['user_id'])
         res_accounts = []
         if db_accounts:
             for dba in db_accounts:
@@ -73,16 +73,24 @@ def accounts_for_user(username):
                 p4=content['login_password'])
         return content
 
-@api.route('/<string:username>/account/<int:account_id>', methods=['GET','PUT','DELETE'])
+@api.route('/<string:username>/accounts/<int:account_id>', methods=['GET','PUT','DELETE'])
 def account_for_id(username, account_id):
     if not _is_logged_in(username):
         return abort(403)
     if request.method == 'GET':
         pass
     if request.method == 'PUT':
-        pass
+        content = request.get_json()
+        sql_statement = '''UPDATE accounts
+                           SET login_password= %s, last_changed_on = current_timestamp
+                           WHERE account_id = %s;'''
+        db_util.execute_statement_and_commit(sql_statement,p1=content['password'],p2=account_id)
+        return request.get_json()
     if request.method == 'DELETE':
-        pass
+        sql_statement = '''DELETE FROM accounts 
+                            WHERE account_id = %s;'''
+        db_util.execute_statement_and_commit(sql_statement,p1=account_id)
+        return ''
 
 def _is_logged_in(username):
     return ('username' in session) and (username == session['username'])
