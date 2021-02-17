@@ -5,7 +5,6 @@ import psycopg2
 def get_configuration(section,filename='server/database.ini'):
   parser = ConfigParser()
   parser.read(filename)
-  # get section, default to postgresql
   config = {}
   if parser.has_section(section):
     contents = parser.items(section)
