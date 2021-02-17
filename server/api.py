@@ -38,10 +38,8 @@ def logout():
 
 @api.route('/<string:username>/accounts', methods=['GET','POST'])
 def accounts_for_user(username):
-    if 'username' not in session:
-        return abort(404)
-    if username != session['username']:
-        return abort(404)
+    if not _is_logged_in(username):
+        return abort(403)
     if request.method == 'GET':
         sql_statement = 'SELECT * FROM users WHERE username = %s'
         db_user = db_util.execute_select_single(sql_statement,p1=username)
@@ -75,6 +73,16 @@ def accounts_for_user(username):
                 p4=content['login_password'])
         return content
 
-@api.route('/<string:username>/account/<int:account_id>')
+@api.route('/<string:username>/account/<int:account_id>', methods=['GET','PUT','DELETE'])
 def account_for_id(username, account_id):
-    pass
+    if not _is_logged_in(username):
+        return abort(403)
+    if request.method == 'GET':
+        pass
+    if request.method == 'PUT':
+        pass
+    if request.method == 'DELETE':
+        pass
+
+def _is_logged_in(username):
+    return ('username' in session) and (username == session['username'])
