@@ -82,9 +82,9 @@ def account_for_id(username, account_id):
     if request.method == 'PUT':
         content = request.get_json()
         sql_statement = '''UPDATE accounts
-                           SET login_password= %s, last_changed_on = current_timestamp
+                           SET login_name = %s, login_password = %s, last_changed_on = current_timestamp
                            WHERE account_id = %s;'''
-        db_util.execute_statement_and_commit(sql_statement,p1=content['password'],p2=account_id)
+        db_util.execute_statement_and_commit(sql_statement,p1=content['login_name'],p2=content['login_password'],p3=account_id)
         return request.get_json()
     if request.method == 'DELETE':
         sql_statement = '''DELETE FROM accounts 
@@ -94,3 +94,6 @@ def account_for_id(username, account_id):
 
 def _is_logged_in(username):
     return ('username' in session) and (username == session['username'])
+
+if __name__ == '__main__':
+    api.run()
