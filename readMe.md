@@ -22,3 +22,7 @@
    REFERENCES users (user_id)
  );
  ```
+## how to use
+can be run locally by running the following code: ```python3 server/api.py```\
+once the server is up and running you can execute the following to access the password manager: ```python3 client/manager.py```\
+
