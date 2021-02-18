@@ -6,7 +6,7 @@ class User:
   def __init__(self, name, password):
     self.name = name
     self.password = password
-    db_util.read_db_config()
+    db_util.get_configuration(section='postgresql')
   
   def is_authenticated(self):
     sql_statement = 'SELECT * FROM users WHERE user_id = %s'
