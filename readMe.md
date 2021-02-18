@@ -2,6 +2,7 @@
 
 ## local PostgreSQL database
 ### create table statements
+```
  CREATE TABLE users(
    user_id SERIAL PRIMARY KEY,
    username VARCHAR ( 50 ) UNIQUE NOT NULL,
@@ -20,3 +21,4 @@
    FOREIGN KEY (user_id)
    REFERENCES users (user_id)
  );
+ ```
