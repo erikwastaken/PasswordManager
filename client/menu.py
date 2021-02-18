@@ -86,7 +86,7 @@ class Menu:
 
   def __display_accounts(self):
     c = 0
-    accounts = json.loads(self.user.get_accounts())['accounts']
+    accounts = self.user.get_accounts()
     for a in accounts:
       print('{0} | {1} | {2}'.format(c,a['service'], a['login_name']))
       c += 1
