@@ -129,8 +129,7 @@ class Menu:
       self.__generate_password()
     new_password = Menu.__get_clean_input_for_field("Password")
     service = self.user.get_accounts()[index]['service']
-    login_name = self.user.get_accounts()[index]['login_name']
-    self.user.change_account_password(new_password,service,login_name)
+    self.user.change_account_password(index,new_password)
     print("Password for {0} changed to {1}".format(service,new_password))
 
   def __delete_login(self):
@@ -141,7 +140,7 @@ class Menu:
     login_name = self.user.get_accounts()[index]['login_name']
     confirmation_answer = input("Are you sure that you want to delete the account for service {0}? Y/N ".format(service))
     if confirmation_answer.upper() == 'Y':
-      self.user.delete_account(service,login_name)
+      self.user.delete_account(index)
       print("Account for service {0} has been deleted.".format(service))
 
   def __change_master_password(self):
