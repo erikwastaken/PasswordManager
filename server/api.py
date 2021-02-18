@@ -38,7 +38,7 @@ def logout():
     session.pop('user_id',None)
     return ''
 
-@api.route('/<string:username>/accounts', methods=['GET','POST'])
+@api.route('/users/<string:username>/accounts', methods=['GET','POST'])
 def accounts_for_user(username):
     if not _is_logged_in(username):
         return abort(403)
@@ -73,7 +73,7 @@ def accounts_for_user(username):
                 p4=content['login_password'])
         return content
 
-@api.route('/<string:username>/accounts/<int:account_id>', methods=['GET','PUT','DELETE'])
+@api.route('/users/<string:username>/accounts/<int:account_id>', methods=['GET','PUT','DELETE'])
 def account_for_id(username, account_id):
     if not _is_logged_in(username):
         return abort(403)
