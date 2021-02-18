@@ -49,8 +49,6 @@ class User:
     return response.status_code
 
   def change_master_password(self,new_master_password):
-    hashed_password = hashlib.sha256(new_master_password.encode('utf-8')).hexdigest()
-    sql_statement = '''UPDATE users
-                       SET hashed_pw = %s
-                       WHERE user_id = %s;'''
-    db_util.execute_statement_and_commit(sql_statement,p1=hashed_password,p2=self.name)
+    uri = self.base_url + '/users/{}'.format(self.name)
+    payload = { 'password': new_master_password }
+    response = self.session.put(uri,json=payload)
