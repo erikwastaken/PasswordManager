@@ -92,6 +92,19 @@ def account_for_id(username, account_id):
         db_util.execute_statement_and_commit(sql_statement,p1=account_id)
         return ''
 
+@api.route('/users/<string:username>',methods=['PUT'])
+def update_user(username):
+    if not _is_logged_in(username):
+        return abort(403)
+    if request.method == 'PUT':
+        content = request.get_json()
+        hashed_password = hashlib.sha256(content['password'].encode('utf-8')).hexdigest()
+        sql_statement = '''UPDATE users
+                           SET password = %s
+                           WHERE user_id = %s;'''
+        db_util.execute_statement_and_commit(sql_statement,p1=hashed_password,p2=session['user_id'])
+        return content
+
 def _is_logged_in(username):
     return ('username' in session) and (username == session['username'])
 
