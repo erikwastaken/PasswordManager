@@ -38,6 +38,14 @@ def logout():
     session.pop('user_id',None)
     return ''
 
+@api.route('/users',methods=['POST'])
+def create_user():
+    content = request.get_json()
+    sql_statement = '''INSERT INTO users (username, password, created_on) VALUES (%s, %s, current_timestamp)'''
+    hashed_pw = hashlib.sha256(content['password'].encode('utf-8')).hexdigest()
+    db_util.execute_statement_and_commit(sql_statement,p1=content['username'], p2=hashed_pw)
+    return content
+
 @api.route('/users/<string:username>/accounts', methods=['GET','POST'])
 def accounts_for_user(username):
     if not _is_logged_in(username):
