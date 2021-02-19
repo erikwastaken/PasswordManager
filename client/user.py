@@ -3,6 +3,13 @@ import requests
 import json
 
 class User:
+  @staticmethod
+  def create_user(name,password,base_url='http://localhost:5000'):
+    uri = base_url + '/users'
+    payload = {'username': name, 'password': password}
+    response = requests.post(uri,json=payload)
+    return response.status_code
+
   def __init__(self, name, password, base_url='http://localhost:5000'):
     self.name = name
     self.password = password

@@ -8,17 +8,37 @@ class WrongMasterData(Exception):
   pass
 
 class Menu:
-  user = None
-  
+  def __init__(self,base_url='http://localhost:5000'):
+    self.user = None
+    self.base_url = base_url
+
   def main_loop(self):
-    try:
-      self.login()
-      exit = False
-      while exit == False:
-        self.display_menu()
-        exit = ('Y' == input('Exit? (Y/N) ').upper())
-    except WrongMasterData as e:
-      print(e)
+    answer = ' '
+    while answer not in '12qQ':
+      print('Options:')
+      print('1 - create user')
+      print('2 - login')
+      print('q - quit')
+      answer = input('choose: ')
+    if answer == '1':
+      name = Menu.__get_clean_input_for_field('username')
+      password = Menu.__get_clean_password()
+      print('Confirm password')
+      confirm_pw = Menu.__get_clean_password()
+      if password == confirm_pw:
+        self.user = User.create_user(name, password, self.base_url)
+        print('User {} created!'.format(name))
+    elif answer == '2':
+      try:
+        self.login()
+        exit = False
+        while exit == False:
+          self.display_menu()
+          exit = ('Y' == input('Exit? (Y/N) ').upper())
+      except WrongMasterData as e:
+        print(e)
+    elif answer.upper() == 'Q':
+      print('Quitting...')
     print("Goodbye")
 
   def display_menu(self):
