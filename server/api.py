@@ -1,4 +1,4 @@
-from flask import Flask,request,session,abort
+from flask import Flask,request,session,abort,escape
 import json
 import db_util
 import hashlib
@@ -17,7 +17,7 @@ def index():
 def login():
     content = request.get_json()
     sql_statement = 'SELECT * FROM users WHERE username = %s'
-    db_user = db_util.execute_select_single(sql_statement,p1=content['username'])
+    db_user = db_util.execute_select_single(sql_statement,p1=escape(content['username']))
     if not db_user:
         return abort(403)
     user = {}
@@ -43,7 +43,7 @@ def create_user():
     content = request.get_json()
     sql_statement = '''INSERT INTO users (username, password, created_on) VALUES (%s, %s, current_timestamp)'''
     hashed_pw = hashlib.sha256(content['password'].encode('utf-8')).hexdigest()
-    db_util.execute_statement_and_commit(sql_statement,p1=content['username'], p2=hashed_pw)
+    db_util.execute_statement_and_commit(sql_statement,p1=escape(content['username']), p2=hashed_pw)
     return content
 
 @api.route('/users/<string:username>/accounts', methods=['GET','POST'])
@@ -75,10 +75,10 @@ def accounts_for_user(username):
                            VALUES (%s,%s,%s,%s,current_timestamp);''' 
         db_util.execute_statement_and_commit(
                 sql_statement,
-                p1=content['user_id'],
-                p2=content['service'],
-                p3=content['login_name'],
-                p4=content['login_password'])
+                p1=escape(content['user_id']),
+                p2=escape(content['service']),
+                p3=escape(content['login_name']),
+                p4=escape(content['login_password']))
         return content
 
 @api.route('/users/<string:username>/accounts/<int:account_id>', methods=['GET','PUT','DELETE'])
@@ -92,7 +92,7 @@ def account_for_id(username, account_id):
         sql_statement = '''UPDATE accounts
                            SET login_name = %s, login_password = %s, last_changed_on = current_timestamp
                            WHERE account_id = %s;'''
-        db_util.execute_statement_and_commit(sql_statement,p1=content['login_name'],p2=content['login_password'],p3=account_id)
+        db_util.execute_statement_and_commit(sql_statement,p1=escape(content['login_name']),p2=escape(content['login_password']),p3=account_id)
         return request.get_json()
     if request.method == 'DELETE':
         sql_statement = '''DELETE FROM accounts 
@@ -100,7 +100,7 @@ def account_for_id(username, account_id):
         db_util.execute_statement_and_commit(sql_statement,p1=account_id)
         return ''
 
-@api.route('/users/<string:username>',methods=['PUT'])
+@api.route('/users/<string:username>',methods=['PUT','DELETE'])
 def update_user(username):
     if not _is_logged_in(username):
         return abort(403)
@@ -112,6 +112,16 @@ def update_user(username):
                            WHERE user_id = %s;'''
         db_util.execute_statement_and_commit(sql_statement,p1=hashed_password,p2=session['user_id'])
         return content
+    if request.method == 'DELETE':
+        # delete accounts
+        sql_statement = '''DELETE FROM accounts
+                           WHERE user_id = %s;'''
+        db_util.execute_statement_and_commit(sql_statement,p1=session['user_id'])
+        # delete user
+        sql_statement = '''DELETE FROM users
+                           WHERE user_id = %s;'''
+        db_util.execute_statement_and_commit(sql_statement,p1=session['user_id'])
+        return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
 
 def _is_logged_in(username):
     return ('username' in session) and (username == session['username'])

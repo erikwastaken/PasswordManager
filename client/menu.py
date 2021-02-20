@@ -43,13 +43,14 @@ class Menu:
 
   def display_menu(self):
     answer = " "
-    while answer not in '123456qQ':
+    while answer not in '1234567qQ':
       print("1 - create new login account")
       print("2 - get password")
       print("3 - change password")
       print("4 - delete login account")
       print("5 - change master password")
       print("6 - generate password")
+      print("7 - delete user")
       print("q - quit")
       print()
       answer = input("choose: ")
@@ -66,6 +67,8 @@ class Menu:
       self.__change_master_password()
     elif answer == '6':
       self.__generate_password()
+    elif answer == '7':
+      self._delete_user()
     elif answer.upper() == 'Q':
       return
 
@@ -184,3 +187,22 @@ class Menu:
     length = int(input("How many characters should the password have? "))
     gen_pw = password_generator.get_generated_password(length)
     print('Generated password: {0}'.format(gen_pw))
+  
+  def _delete_user(self):
+    print("This will irrevocably delete your password manager account and all connected data!")
+    confirmation = ' '
+    while confirmation.upper() not in 'YN':
+      confirmation = input("Are you sure, you wish to proceed? [Y/N]")
+    if confirmation.upper() == 'Y':
+      print("Please confirm your username and password:")
+      username = Menu.__get_clean_input_for_field("username")
+      password = Menu.__get_clean_password()
+      rc = self.user.delete_user(username,password)
+      if rc == 200:
+        print("user successfully deleted")
+      else:
+        print("not authorized! User not deleted")
+      print("goodbye")
+      exit()
+    else:
+     return

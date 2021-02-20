@@ -59,3 +59,11 @@ class User:
     uri = self.base_url + '/users/{}'.format(self.name)
     payload = { 'password': new_master_password }
     response = self.session.put(uri,json=payload)
+
+  def delete_user(self,username,password):
+    if username == self.name and password == self.password:
+      uri = self.base_url + '/users/{}'.format(self.name)
+      response = self.session.delete(uri)
+      return response.status_code
+    else:
+      return 403
