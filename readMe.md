@@ -23,7 +23,16 @@
  );
  ```
 ## how to use
-can be run locally by running the following code:\
+on the "server side" have a postgresql database running and create the aforementioned tables;\
+create a database.ini file in the server directory with the access data for the database, e.g.:
+```
+[postgresql]
+host=localhost
+database=password_manager
+user=basic
+password=HelloWorld
+```
+can be run locally by running the following code:
 ```
 python3 server/api.py
 ```
