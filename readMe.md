@@ -32,6 +32,11 @@ database=password_manager
 user=basic
 password=HelloWorld
 ```
+create a communication.ini file in the client directory with the address on which the server will be running, e.g.:
+```
+[connection]
+address=http://localhost:5000
+```
 can be run locally by running the following code:
 ```
 python3 server/api.py
@@ -40,6 +45,7 @@ once the server is up and running you can execute the following to access the pa
 ```
 python3 client/manager.py
 ```  
+the server can be run on e.g. a raspberryPi; in this case change the address in the communication.ini file to the Pi's address;
 
 ## dependencies
 ```
