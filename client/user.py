@@ -1,19 +1,34 @@
 import hashlib
 import requests
 import json
+from configparser import ConfigParser
 
 class User:
   @staticmethod
-  def create_user(name,password,base_url='http://localhost:5000'):
-    uri = base_url + '/users'
+  def create_user(name,password):
+    config = User.get_configuration()
+    uri = config['address'] + '/users'
     payload = {'username': name, 'password': password}
     response = requests.post(uri,json=payload)
     return response.status_code
 
-  def __init__(self, name, password, base_url='http://localhost:5000'):
+  @staticmethod
+  def get_configuration(section='connection',filename='client/communication.ini'):
+    parser = ConfigParser()
+    parser.read(filename)
+    config = {}
+    if parser.has_section(section):
+      contents = parser.items(section)
+      for param in contents:
+        config[param[0]] = param[1]
+    else:
+      raise Exception('Section {0} not found in file {1}'.format(section,filename))
+    return config
+
+  def __init__(self, name, password):
     self.name = name
     self.password = password
-    self.base_url = base_url
+    self.base_url = User.get_configuration()['address']
     self.session = requests.Session()
     self.user_id = 0
     self.accounts = []

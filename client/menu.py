@@ -8,9 +8,8 @@ class WrongMasterData(Exception):
   pass
 
 class Menu:
-  def __init__(self,base_url='http://localhost:5000'):
+  def __init__(self):
     self.user = None
-    self.base_url = base_url
 
   def main_loop(self):
     answer = ' '
@@ -26,7 +25,7 @@ class Menu:
       print('Confirm password')
       confirm_pw = Menu.__get_clean_password()
       if password == confirm_pw:
-        self.user = User.create_user(name, password, self.base_url)
+        self.user = User.create_user(name, password)
         print('User {} created!'.format(name))
     elif answer == '2':
       try:
@@ -84,7 +83,6 @@ class Menu:
     print()
     user_name = Menu.__get_clean_input_for_field("User")
     password = Menu.__get_clean_password()
-
     self.user = User(user_name, password)
     if not self.user.is_authenticated():
       raise WrongMasterData('User or password incorrect')
