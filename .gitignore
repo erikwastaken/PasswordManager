@@ -1,4 +1,5 @@
 database
 database.ini
+communication.ini
 notes.txt
 __pycache__/
