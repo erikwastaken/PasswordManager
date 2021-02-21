@@ -12,7 +12,7 @@
 
  CREATE TABLE accounts(
    account_id SERIAL PRIMARY KEY,
-   user_id VARCHAR ( 50 ) NOT NULL,
+   user_id INT NOT NULL,
    service VARCHAR ( 50 ) NOT NULL,
    login_name VARCHAR ( 50 ) NOT NULL,
    login_password VARCHAR NOT NULL,
