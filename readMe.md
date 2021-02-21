@@ -15,7 +15,7 @@
    user_id VARCHAR ( 50 ) NOT NULL,
    service VARCHAR ( 50 ) NOT NULL,
    login_name VARCHAR ( 50 ) NOT NULL,
-   login_password VARCHAR ( 50 ) NOT NULL,
+   login_password VARCHAR NOT NULL,
    created_on TIMESTAMP NOT NULL,
    last_changed_on TIMESTAMP,
    FOREIGN KEY (user_id)
