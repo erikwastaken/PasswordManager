@@ -33,7 +33,7 @@ class Menu:
         exit = False
         while exit == False:
           self.display_menu()
-          exit = ('Y' == input('Exit? (Y/N) ').upper())
+          exit = ('Y' == input('Exit? [y/n] ').upper())
       except WrongMasterData as e:
         print(e)
     elif answer.upper() == 'Q':
@@ -117,7 +117,7 @@ class Menu:
     login_name = Menu.__get_clean_input_for_field("Login Name")
     gen_pass = ' '
     while gen_pass not in 'YN':
-      gen_pass = input('Generate Password? [Y/N] ').upper()
+      gen_pass = input('Generate Password? [y/n] ').upper()
     if gen_pass == 'Y':
       self.__generate_password()
     login_password = Menu.__get_clean_input_for_field("Password")
@@ -145,7 +145,7 @@ class Menu:
     index = int(input("Which password should be updated? "))
     gen_pass = ' '
     while gen_pass not in 'YN':
-      gen_pass = input('Generate Password? [Y/N] ').upper()
+      gen_pass = input('Generate Password? [y/n] ').upper()
     if gen_pass == 'Y':
       self.__generate_password()
     new_password = Menu.__get_clean_input_for_field("Password")
@@ -159,7 +159,7 @@ class Menu:
     index = int(input("Which password should be deleted? "))
     service = self.user.get_accounts()[index]['service']
     login_name = self.user.get_accounts()[index]['login_name']
-    confirmation_answer = input("Are you sure that you want to delete the account for service {0}? Y/N ".format(service))
+    confirmation_answer = input("Are you sure that you want to delete the account for service {0}? [y/n] ".format(service))
     if confirmation_answer.upper() == 'Y':
       self.user.delete_account(index)
       print("Account for service {0} has been deleted.".format(service))
@@ -181,16 +181,19 @@ class Menu:
       print("Confirmation failed")
   
   def __generate_password(self):
-    print()
-    length = int(input("How many characters should the password have? "))
-    gen_pw = password_generator.get_generated_password(length)
-    print('Generated password: {0}'.format(gen_pw))
+    accepted = False
+    while accepted == False:
+      print()
+      length = int(input("How many characters should the password have? "))
+      gen_pw = password_generator.get_generated_password(length)
+      print('Generated password: {0}'.format(gen_pw))
+      accepted = (input("Is this password acceptable? [y/n]").upper() == 'Y')
   
   def _delete_user(self):
     print("This will irrevocably delete your password manager account and all connected data!")
     confirmation = ' '
     while confirmation.upper() not in 'YN':
-      confirmation = input("Are you sure, you wish to proceed? [Y/N]")
+      confirmation = input("Are you sure, you wish to proceed? [y/n]")
     if confirmation.upper() == 'Y':
       print("Please confirm your username and password:")
       username = Menu.__get_clean_input_for_field("username")
