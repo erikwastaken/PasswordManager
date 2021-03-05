@@ -1,7 +1,15 @@
 # A basic command line password manager
 
 ## What does it do?
-Allows to create multiple users, that can encrypt and store passwords for their accounts in a locally hosted PostgreSQL database, generate passwords of desired length, change stored passwords, etc.
+Allows to create multiple users, that can encrypt and store passwords for their accounts in a locally hosted PostgreSQL database, generate passwords of desired length, change stored passwords, copy them to the clipboard, etc.
+
+## Concepts
+- SQL
+- building a web API with Flask
+- talking to the API via HTTP requests
+- encryption
+- command line interaction and secure entering of passwords
+- writing and parsing config files
 
 ## The database
 ### create table statements
