@@ -1,6 +1,9 @@
-# Very basic command line password manager
+# A basic command line password manager
 
-## local PostgreSQL database
+## What does it do?
+Allows to create multiple users, that can encrypt and store passwords for their accounts in a locally hosted PostgreSQL database, generate passwords of desired length, change stored passwords, etc.
+
+## The database
 ### create table statements
 ```
  CREATE TABLE users(
@@ -22,8 +25,8 @@
    REFERENCES users (user_id)
  );
  ```
-## how to use
-on the "server side" have a postgresql database running and create the aforementioned tables;\
+## How to use
+On the "server side" have a PostgreSQL database running and create the aforementioned tables;\
 create a database.ini file in the server directory with the access data for the database, e.g.:
 ```
 [postgresql]
@@ -47,16 +50,13 @@ python3 client/manager.py
 ```  
 the server can be run on e.g. a raspberryPi; in this case change the address in the communication.ini file to the Pi's address;
 
-## dependencies
+## Dependencies
 ```
 psycopg2
-hashlib
 requests
-json
 flask
 configparser
 getpass
 pyperclip
-random
 cryptography
 ```
