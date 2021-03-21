@@ -1,8 +1,12 @@
 from menu import Menu
 
 def main():
-  menu = Menu()
-  menu.main_loop() 
+  # lazy exception hanling
+  try:
+    menu = Menu()
+    menu.main_loop()
+  except:
+    print("Something went wrong...")
 
 if __name__ == '__main__':
   main()
